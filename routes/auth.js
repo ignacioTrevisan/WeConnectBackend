@@ -1,0 +1,56 @@
+const { Router } = require('express');
+const { check } = require('express-validator')
+
+
+const router = Router();
+
+const { crearUsuario, logearUsuario, renewToken, actualizarUsuario } = require('../controllers/auth');
+const { validarCampos } = require('../middleware/validar-campos');
+const { validarJWT } = require('../middleware/validar-jwt');
+router.post
+    ('/register',
+        [
+            check('DisplayName', 'El DisplayName es obligatorio').notEmpty(),
+            check('DisplayName', 'El DisplayName debe tener un minimo de 4 caracteres').isLength({ min: 4 }),
+            check('Email', 'El email es obligatorio').notEmpty(),
+            check('Email', 'El email no tiene el formato correcto').isEmail(),
+            check('Contraseña', 'La contraseña es obligatoria').notEmpty(),
+            check('Contraseña', 'La contraseña es debe tener un minimo de 6 caracteres y maximo de 18').isLength({ min: 6, max: 18 }),
+            check('fecha_nacimiento', 'la fecha de nacimiento es obligatoria').notEmpty(),
+            check('fecha_nacimiento', 'la fecha de nacimiento no tiene el formato correcto').isDate(),
+            validarCampos
+        ],
+        crearUsuario)
+
+router.post(
+    '/login',
+    [
+        check('DisplayName', 'El DisplayName es obligatorio').notEmpty(),
+        check('Contraseña', 'La contraseña es obligatoria').notEmpty(),
+        check('Contraseña', 'La contraseña es debe tener un minimo de 6 caracteres y maximo de 18').isLength({ min: 6, max: 18 }),
+        validarCampos
+    ], logearUsuario
+
+
+)
+
+
+
+
+
+router.get('/renew', validarJWT, renewToken)
+
+
+router.put('/update', [
+    check('ContraseñaAntigua', 'Falta la contraseña antigua').notEmpty(),
+    check('uid', 'Falta el uid').notEmpty(),
+    check('Contraseña', 'Falta la nueva contraseña').notEmpty(),
+    check('ContraseñaAntigua', 'La Contraseña antigua es debe tener un minimo de 6 caracteres y maximo de 18').isLength({ min: 6, max: 18 }),
+    check('Contraseña', 'La contraseña es debe tener un minimo de 6 caracteres y maximo de 18').isLength({ min: 6, max: 18 }),
+
+    validarCampos
+], actualizarUsuario)
+
+
+
+module.exports = router;
