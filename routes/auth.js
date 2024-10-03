@@ -49,7 +49,7 @@ router.post(
 
 
 
-router.get('/renew', validarJWT, renewToken)
+router.post('/renew', validarJWT, renewToken)
 
 
 router.put('/update', [
