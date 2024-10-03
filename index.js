@@ -3,8 +3,13 @@ const { dbConnection } = require('./database');
 require('dotenv').config();
 const port = process.env.PORT;
 //Crear el servidor de express
+const cors = require('cors');
 
-
+app.use(cors());
+app.use(cors({
+    origin: '*'
+}));
+//
 
 const app = express();
 
