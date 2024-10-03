@@ -25,7 +25,7 @@ const validarJWT = async (req, res, next) => {
         try {
 
             let usuario = await Usuario.findOne({ _id: uid })
-            const fechaCreacionToken = new Date(payload.fecha_creacion).getTime();
+            const fechaCreacionToken = new Date(payload.fecha_creacion_token).getTime();
             const fechaUltimaActualizacion = new Date(usuario.ultimaActualizacionDeContraseña).getTime();
 
 
@@ -40,7 +40,9 @@ const validarJWT = async (req, res, next) => {
 
                 return res.status(401).json({
                     ok: false,
-                    msg: 'La contraseña se actualizo, por favor vuelva a ingresarla. '
+                    msg: 'La contraseña se actualizo, por favor vuelva a ingresarla. ',
+                    fechaCreacionToken,
+                    fechaUltimaActualizacion
                 })
 
             }
