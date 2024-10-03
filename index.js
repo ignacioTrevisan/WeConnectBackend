@@ -5,13 +5,13 @@ const port = process.env.PORT;
 //Crear el servidor de express
 const cors = require('cors');
 
+const app = express();
 app.use(cors());
 app.use(cors({
     origin: '*'
 }));
 //
 
-const app = express();
 
 
 //Base de datos
