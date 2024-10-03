@@ -65,7 +65,7 @@ const verificarNombreDeUsuario = async (req, res) => {
             })
         }
     } catch (error) {
-        return res.status(400).json({
+        return res.status(404).json({
             ok: false,
             msg: `Ocurrio un error buscando el usuario: ${error}`
         })
@@ -75,7 +75,7 @@ const verificarNombreDeUsuario = async (req, res) => {
 const logearUsuario = async (req, res) => {
 
 
-    const { DisplayName, Contraseña, Email } = req.body
+    const { DisplayName, Contraseña } = req.body
     try {
         let usuario = await Usuario.findOne({ DisplayName })
         if (!usuario) {
@@ -91,7 +91,7 @@ const logearUsuario = async (req, res) => {
 
         if (!validPassword) {
 
-            res.json({
+            res.status(400).json({
                 ok: false,
                 msg: 'Contraseña incorrecta'
             })
@@ -101,6 +101,7 @@ const logearUsuario = async (req, res) => {
 
             res.json({
                 ok: true,
+                usuario: usuario,
                 uid: usuario.id,
                 token
             })
@@ -109,7 +110,11 @@ const logearUsuario = async (req, res) => {
 
 
     } catch (error) {
-
+        console.error(error);
+        return res.status(500).json({
+            ok: false,
+            msg: 'Error al logear usuario. Por favor, intenta de nuevo más tarde.'
+        });
     }
 }
 const renewToken = async (req, res) => {
