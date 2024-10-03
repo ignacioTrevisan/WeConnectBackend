@@ -47,6 +47,31 @@ const crearUsuario = async (req, res = express.response) => {
     }
 }
 
+const verificarNombreDeUsuario = async (req, res) => {
+    const { DisplayName } = req.body
+    try {
+
+        let usuario = await Usuario.findOne({ DisplayName })
+        if (!usuario) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'No existe usuario con ese nombre de usuario'
+            })
+
+        } else {
+            res.status(200).json({
+                ok: true,
+                msg: 'Existe usuario con ese nombre de usuario'
+            })
+        }
+    } catch (error) {
+        return res.status(400).json({
+            ok: false,
+            msg: `Ocurrio un error buscando el usuario: ${error}`
+        })
+    }
+}
+
 const logearUsuario = async (req, res) => {
 
 
@@ -156,5 +181,5 @@ module.exports = {
     logearUsuario,
     renewToken,
     actualizarUsuario,
-
+    verificarNombreDeUsuario
 }

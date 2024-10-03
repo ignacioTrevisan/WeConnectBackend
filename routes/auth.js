@@ -4,7 +4,7 @@ const { check } = require('express-validator')
 
 const router = Router();
 
-const { crearUsuario, logearUsuario, renewToken, actualizarUsuario } = require('../controllers/auth');
+const { crearUsuario, logearUsuario, renewToken, actualizarUsuario, verificarNombreDeUsuario } = require('../controllers/auth');
 const { validarCampos } = require('../middleware/validar-campos');
 const { validarJWT } = require('../middleware/validar-jwt');
 router.post
@@ -33,6 +33,17 @@ router.post(
 
 
 )
+
+router.post(
+    '/verificarDisplayname',
+    [
+        check('DisplayName', 'El DisplayName es obligatorio').notEmpty(),
+        validarCampos
+    ], verificarNombreDeUsuario
+
+
+)
+
 
 
 
