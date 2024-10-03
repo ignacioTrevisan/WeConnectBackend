@@ -5,8 +5,7 @@ const { response } = require('express')
 
 
 const validarJWT = async (req, res, next) => {
-    const token = req.header('x-token');
-    const uid = req.header('x-uid');
+    const { token, uid } = req.body;
     if (!token || !uid) {
         return res.status(401).json({
             ok: false,

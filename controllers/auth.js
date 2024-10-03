@@ -118,7 +118,7 @@ const logearUsuario = async (req, res) => {
     }
 }
 const renewToken = async (req, res) => {
-    const { uid, displayName } = req;
+    const { uid, displayName } = req.body;
     const token = await generarJWT(uid, displayName)
 
     res.json({
