@@ -40,6 +40,11 @@ const UsuarioSchema = Schema({
         required: false,
         unique: false
     },
+    FotoUrl: {
+        type: String,
+        required: false,
+
+    },
     ultimaActualizacionDeContraseña: {
         type: Date,
         required: true

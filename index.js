@@ -30,6 +30,12 @@ app.use(express.json());
 
 app.use('/api/auth', require('./routes/auth'));
 
+app.use('/api/usuario', require('./routes/usuario'));
+
+app.use('/api/post', require('./routes/post'));
+
+
+
 //escuchar peticiones
 
 app.listen(port, () => { console.log(`Servidor corriendo en el puerto ${port}`) });

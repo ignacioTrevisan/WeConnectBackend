@@ -27,6 +27,8 @@ const crearUsuario = async (req, res = express.response) => {
         usuario = new Usuario(req.body);
         const salt = bcypt.genSaltSync();
         usuario.Contraseña = bcypt.hashSync(Contraseña, salt);
+        usuario.ultimaActualizacionDeContraseña = new Date(new Date + "UTC");
+        usuario.FotoUrl = 'https://res.cloudinary.com/nachotrevisan/image/upload/v1728332295/weConnect/mlereb0beazyrjqkqzvb.jpg';
         await usuario.save();
 
         const token = await generarJWT(usuario.id, usuario.DisplayName)
@@ -34,7 +36,8 @@ const crearUsuario = async (req, res = express.response) => {
         res.status(201).json({
             ok: true,
             uid: usuario.id,
-            token
+            token,
+
         })
 
     } catch (error) {
@@ -133,11 +136,10 @@ const actualizarUsuario = async (req, res) => {
 
     const
         {
-            DisplayName, Nombre, Apellido, Contraseña,
+            DisplayName, Nombre, Apellido,
             Email, genero, fecha_nacimiento,
-            numero_telefono, uid, ContraseñaAntigua
+            numero_telefono, uid, Foto_de_perfil
         } = req.body;
-    let usuario = await Usuario.findOne({ _id: uid })
 
 
     try {
@@ -157,7 +159,7 @@ const actualizarUsuario = async (req, res) => {
         if (DisplayName) updatedFields.DisplayName = DisplayName;
         if (Nombre) updatedFields.Nombre = Nombre;
         if (Apellido) updatedFields.Apellido = Apellido;
-        if (Contraseña) await ActualizarContraseña(uid, ContraseñaAntigua, Contraseña);
+        if (Foto_de_perfil) updatedFields.FotoUrl = Foto_de_perfil;
         if (Email) updatedFields.Email = Email;
         if (genero) updatedFields.genero = genero;
         if (fecha_nacimiento) updatedFields.fecha_nacimiento = fecha_nacimiento;
@@ -181,10 +183,55 @@ const actualizarUsuario = async (req, res) => {
 }
 
 
+const CambiarContraseña = async (req, res) => {
+
+
+    const
+        {
+            uid,
+            Contraseña,
+            ContraseñaAntigua
+        } = req.body;
+
+
+    try {
+        // Encuentra al usuario por su ID
+        let usuario = await Usuario.findOne({ _id: uid });
+
+        if (!usuario) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'Usuario no encontrado',
+            });
+        }
+
+        const resp = await ActualizarContraseña(uid, ContraseñaAntigua, Contraseña);
+        if (!resp.ok) {
+            return res.status(401).json({
+
+                ok: false,
+                msg: 'La contraseña ingresada no es correcta',
+            })
+
+        }
+        return res.status(200).json({
+            ok: true,
+            msg: 'Contraseña actualizada correctamente',
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            ok: false,
+            msg: 'Ocurrió un error al actualizar la contraseña',
+        });
+    }
+}
+
 module.exports = {
     crearUsuario,
     logearUsuario,
     renewToken,
     actualizarUsuario,
-    verificarNombreDeUsuario
+    verificarNombreDeUsuario,
+    CambiarContraseña
 }

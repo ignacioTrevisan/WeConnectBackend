@@ -4,9 +4,11 @@ const { check } = require('express-validator')
 
 const router = Router();
 
-const { crearUsuario, logearUsuario, renewToken, actualizarUsuario, verificarNombreDeUsuario } = require('../controllers/auth');
+const { crearUsuario, logearUsuario, renewToken, actualizarUsuario, verificarNombreDeUsuario, CambiarContraseña } = require('../controllers/auth');
 const { validarCampos } = require('../middleware/validar-campos');
 const { validarJWT } = require('../middleware/validar-jwt');
+
+
 router.post
     ('/register',
         [
@@ -16,8 +18,7 @@ router.post
             check('Email', 'El email no tiene el formato correcto').isEmail(),
             check('Contraseña', 'La contraseña es obligatoria').notEmpty(),
             check('Contraseña', 'La contraseña es debe tener un minimo de 6 caracteres y maximo de 18').isLength({ min: 6, max: 18 }),
-            check('fecha_nacimiento', 'la fecha de nacimiento es obligatoria').notEmpty(),
-            check('fecha_nacimiento', 'la fecha de nacimiento no tiene el formato correcto').isDate(),
+
             validarCampos
         ],
         crearUsuario)
@@ -53,14 +54,22 @@ router.post('/renew', validarJWT, renewToken)
 
 
 router.put('/update', [
+    check('uid', 'Falta el uid').notEmpty(),
+
+
+    validarCampos
+], actualizarUsuario)
+
+
+
+router.put('/updatePassword', [
     check('ContraseñaAntigua', 'Falta la contraseña antigua').notEmpty(),
     check('uid', 'Falta el uid').notEmpty(),
     check('Contraseña', 'Falta la nueva contraseña').notEmpty(),
     check('ContraseñaAntigua', 'La Contraseña antigua es debe tener un minimo de 6 caracteres y maximo de 18').isLength({ min: 6, max: 18 }),
     check('Contraseña', 'La contraseña es debe tener un minimo de 6 caracteres y maximo de 18').isLength({ min: 6, max: 18 }),
-
     validarCampos
-], actualizarUsuario)
+], CambiarContraseña)
 
 
 
