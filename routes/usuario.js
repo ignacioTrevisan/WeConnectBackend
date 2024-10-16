@@ -4,7 +4,7 @@ const { validarCampos } = require('../middleware/validar-campos');
 const router = Router();
 
 
-const { buscarUsuario } = require('../controllers/usuario')
+const { buscarUsuario, traerTodos, buscarUsuariosPorDisplayNames } = require('../controllers/usuario')
 router.post(
     '/buscar',
     [
@@ -14,6 +14,27 @@ router.post(
 
 
 )
+
+router.get(
+    '/traerTodos',
+    [
+        validarCampos
+    ], traerTodos
+
+
+)
+
+router.get(
+    '/buscarUsuariosPorDisplayNames',
+    [
+        validarCampos
+    ], buscarUsuariosPorDisplayNames
+
+
+)
+
+
+
 
 
 module.exports = router;

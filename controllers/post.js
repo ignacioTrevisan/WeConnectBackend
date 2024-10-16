@@ -112,10 +112,10 @@ const traerPorUsuario = async (req, res = express.response) => {
     try {
         let post = await Post.find({ Uid: idUsuario });
         let postArray = post.filter((p) => p.esComentario === false)
-        let usuario = await Usuario.find({ _id: post.Uid })
-        post.DisplayName = usuario.DisplayName;
-        post.Foto_de_usuario = usuario.FotoUrl;
-        if (post) {
+        let usuario = await Usuario.findOne({ _id: postArray[0].Uid })
+        postArray.map((p) => p.DisplayName = usuario.DisplayName);
+        postArray.Foto_de_usuario = usuario.FotoUrl;
+        if (postArray) {
             res.status(200).json({
                 ok: true,
                 data: postArray
